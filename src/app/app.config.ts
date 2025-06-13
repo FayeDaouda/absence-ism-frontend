@@ -1,25 +1,28 @@
+import { provideHttpClient } from '@angular/common/http';
 import { ApplicationConfig } from '@angular/core';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { provideRouter } from '@angular/router';
-import { AppComponent } from './app.component';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { TestUtilisateursComponent } from './pages/test-utilisateurs/test-utilisateurs.component';
+import { provideRouter } from '@angular/router';
+
+// Composants standalone
+import { AppComponent } from './app.component';
+import { TestUtilisateursComponent } from './admin/pages/test-utilisateurs/test-utilisateurs.component';
+import { LoginComponent } from './admin/pages/login/login.component';
+import { DashboardAdminComponent } from './admin/pages/dashboard-admin/dashboard-admin.component'; // à créer bientôt
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideHttpClient(), // si tu veux ajouter un interceptor plus tard : withInterceptors([interceptor])
+    provideHttpClient(),
     provideRouter([
-      {
-        path: '',
-        component: AppComponent
-      },
-      {
-        path: 'test-utilisateurs',
-        component: TestUtilisateursComponent
-      }
+      { path: '', redirectTo: '/admin/login', pathMatch: 'full' },
+
+      // Routes publiques
+      { path: 'test-utilisateurs', component: TestUtilisateursComponent },
+      { path: 'admin/login', component: LoginComponent },
+
+      // Routes privées (protégées plus tard avec un AuthGuard)
+      { path: 'admin/dashboard-admin', component: DashboardAdminComponent }
     ])
   ]
 };
 
-// Point d'entrée pour booter l'app si tu utilises standalone components :
 bootstrapApplication(AppComponent, appConfig).catch(err => console.error(err));
