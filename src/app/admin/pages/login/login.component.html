@@ -1,10 +1,11 @@
 <div class="login-container">
     <h2>Connexion Admin</h2>
-    <form (submit)="onSubmit(); $event.preventDefault()">
-      <input type="email" [(ngModel)]="email" placeholder="Email" name="email" required />
-      <input type="password" [(ngModel)]="motDePasse" placeholder="Mot de passe" name="motDePasse" required />
-      <button type="submit">Se connecter</button>
-    </form>
+    <form (ngSubmit)="onSubmit()">
+        <input type="email" [(ngModel)]="email" placeholder="Email" name="email" required />
+        <input type="password" [(ngModel)]="motDePasse" placeholder="Mot de passe" name="motDePasse" required />
+        <button type="submit">Se connecter</button>
+      </form>
+      
     <p *ngIf="erreurMessage" class="error">{{ erreurMessage }}</p>
   </div>
   

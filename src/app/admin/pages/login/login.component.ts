@@ -18,6 +18,7 @@ export class LoginComponent {
   constructor(private authService: AuthService, private router: Router) {}
 
   onSubmit() {
+    console.log('Soumission formulaire', this.email, this.motDePasse);
     this.authService.login(this.email, this.motDePasse).subscribe({
       next: (res) => {
         this.authService.saveToken(res.token);
@@ -29,4 +30,5 @@ export class LoginComponent {
       }
     });
   }
+  
 }
