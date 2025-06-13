@@ -45,8 +45,18 @@ export class AuthService {
 
   private loadUserFromLocalStorage() {
     const data = localStorage.getItem('user_data');
-    if (data) {
-      this.currentUser.set(JSON.parse(data));
+  
+    try {
+      if (data) {
+        this.currentUser.set(JSON.parse(data));
+      } else {
+        this.currentUser.set(null);
+      }
+    } catch (error) {
+      console.error('Erreur lors du chargement du user depuis le localStorage:', error);
+      this.currentUser.set(null);
+      localStorage.removeItem('user_data'); // Nettoyage si data corrompue
     }
   }
+  
 }
