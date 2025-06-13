@@ -1,16 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-dashboard-admin',
-  templateUrl: './dashboard-admin.component.html'
+  templateUrl: './dashboard-admin.component.html',
+  styleUrls: ['./dashboard-admin.component.css']
 })
-export class DashboardAdminComponent {
-  utilisateur = this.authService.currentUser();
+export class DashboardAdminComponent implements OnInit {
+  utilisateur: any = null;
 
   constructor(private authService: AuthService) {}
 
-  logout() {
-    this.authService.logout();
+  ngOnInit(): void {
+    this.utilisateur = this.authService.currentUser();
+    // ou si currentUser est un signal, fais : this.utilisateur = this.authService.currentUser();
   }
 }
