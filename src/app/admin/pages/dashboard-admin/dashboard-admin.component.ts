@@ -24,7 +24,7 @@ export class DashboardAdminComponent implements OnInit {
     this.http.get<any[]>('https://absence-ism-backend.onrender.com/api/absences').subscribe({
       next: (data) => {
         this.absencesAll = data;
-        this.absencesDuJour = data.filter(absence => this.isToday(new Date(absence.dateAbsence)));
+        this.absencesDuJour = data.filter(absence => this.isToday(new Date(absence.date)));
       },
       error: err => console.error(err)
     });
@@ -34,7 +34,7 @@ export class DashboardAdminComponent implements OnInit {
     this.http.get<any[]>('https://absence-ism-backend.onrender.com/api/justifications').subscribe({
       next: (data) => {
         this.justificationsAll = data;
-        this.justificationsDuJour = data.filter(justif => this.isToday(new Date(justif.dateJustification)));
+        this.justificationsDuJour = data.filter(justif => this.isToday(new Date(justif.dateSoumission)));
       },
       error: err => console.error(err)
     });
