@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterModule],  // <-- Import important ici !
-  template: `<router-outlet></router-outlet>`
+  imports: [RouterModule],
+  template: `<router-outlet></router-outlet>`,  // point d'entrée des pages
 })
 export class AppComponent {}
