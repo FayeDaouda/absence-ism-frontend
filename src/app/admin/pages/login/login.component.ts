@@ -13,7 +13,10 @@ import { AuthService } from '../../../services/auth.service';
 export class LoginComponent {
   email = '';
   motDePasse = '';
-  erreurMessage = '';
+ 
+
+
+  erreurMessage: string | null = null; 
 
   constructor(private authService: AuthService, private router: Router) {}
 
