@@ -1,27 +1,31 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../../../services/auth.service';
+import { FormsModule } from '@angular/forms';  // <-- important
 import { Router } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-login',
+  standalone: true,               // <-- standalone component
+  imports: [FormsModule],         // <-- importer FormsModule ici
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
-  standalone: true
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  email: string = '';
-  motDePasse: string = '';
-  erreur: string = '';
+  email = '';
+  motDePasse = '';
+  erreurMessage = '';
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  login(): void {
+  onSubmit() {
     this.authService.login(this.email, this.motDePasse).subscribe({
-      next: () => {
+      next: (res) => {
+        this.authService.saveToken(res.token);
+        this.authService.setCurrentUser(res.utilisateur);
         this.router.navigate(['/admin/dashboard-admin']);
       },
-      error: () => {
-        this.erreur = 'Email ou mot de passe incorrect';
+      error: (err) => {
+        this.erreurMessage = 'Email ou mot de passe incorrect';
       }
     });
   }

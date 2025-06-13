@@ -9,7 +9,6 @@ export class AuthService {
   private readonly apiUrl = 'https://absence-ism-backend.onrender.com/api/auth';
   private readonly tokenKey = 'auth_token';
 
-  // Signal pour suivre l’état utilisateur
   currentUser = signal<any | null>(null);
 
   constructor(private http: HttpClient, private router: Router) {
@@ -17,14 +16,12 @@ export class AuthService {
   }
 
   login(email: string, motDePasse: string) {
-    return this.http.post<{ token: string, utilisateur: any }>(`${this.apiUrl}/login`, {
-      email,
-      motDePasse
-    });
+    return this.http.post<{ token: string; utilisateur: any }>(`${this.apiUrl}/login`, { email, motDePasse });
   }
 
   logout() {
     localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem('user_data');
     this.currentUser.set(null);
     this.router.navigate(['/admin/login']);
   }

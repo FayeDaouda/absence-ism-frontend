@@ -1,19 +1,29 @@
 .login-container {
-    max-width: 400px;
-    margin: 80px auto;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 300px;
+    margin: auto;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
   }
   
-  .login-container input {
+  input {
     display: block;
     width: 100%;
-    margin-bottom: 10px;
-    padding: 8px;
+    margin-bottom: 0.7rem;
+    padding: 0.4rem;
   }
   
-  .erreur {
+  button {
+    width: 100%;
+    padding: 0.5rem;
+    background-color: #0066cc;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .error {
     color: red;
+    margin-top: 1rem;
   }
   

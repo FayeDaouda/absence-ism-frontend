@@ -1,28 +1,25 @@
-import { provideHttpClient } from '@angular/common/http';
-import { ApplicationConfig } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
+import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 
-// Composants standalone
 import { AppComponent } from './app.component';
-import { TestUtilisateursComponent } from './admin/pages/test-utilisateurs/test-utilisateurs.component';
-import { LoginComponent } from './admin/pages/login/login.component';
-import { DashboardAdminComponent } from './admin/pages/dashboard-admin/dashboard-admin.component'; // à créer bientôt
 
-export const appConfig: ApplicationConfig = {
+import { LoginComponent } from './admin/pages/login/login.component';
+import { DashboardAdminComponent } from './admin/pages/dashboard-admin/dashboard-admin.component';
+
+import { AuthGuard } from './guards/auth.guard';
+
+export const appConfig = {
   providers: [
     provideHttpClient(),
     provideRouter([
-      { path: '', redirectTo: '/admin/login', pathMatch: 'full' },
-
-      // Routes publiques
-      { path: 'test-utilisateurs', component: TestUtilisateursComponent },
       { path: 'admin/login', component: LoginComponent },
-
-      // Routes privées (protégées plus tard avec un AuthGuard)
-      { path: 'admin/dashboard-admin', component: DashboardAdminComponent }
+      { path: 'admin/dashboard', component: DashboardAdminComponent, canActivate: [AuthGuard] },
+      { path: '', redirectTo: 'admin/login', pathMatch: 'full' },
+      { path: '**', redirectTo: 'admin/login' }
     ])
   ]
 };
 
-bootstrapApplication(AppComponent, appConfig).catch(err => console.error(err));
+bootstrapApplication(AppComponent, appConfig)
+  .catch(err => console.error(err));
