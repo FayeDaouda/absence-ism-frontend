@@ -27,7 +27,7 @@ export class DashboardAdminComponent implements OnInit {
   }
 
   loadAbsences(): void {
-    this.http.get<any[]>('https://gestion-absence-ism-dev.onrender.com/api/absence-web')
+    this.http.get<any[]>('https://absence-ism-backend.onrender.com/api/absences')
       .subscribe({
         next: (data) => {
           this.absencesAll = data;
