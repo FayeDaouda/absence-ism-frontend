@@ -13,6 +13,12 @@ export class DashboardAdminComponent implements OnInit {
   absencesDuJour: any[] = [];
   justificationsDuJour: any[] = [];
 
+  // Nouveaux champs pour stats
+  totalAbsences = 0;
+  totalRetards = 0;
+  totalJustifications = 0;
+  totalJustificationsDuJour = 0;
+
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
@@ -26,6 +32,10 @@ export class DashboardAdminComponent implements OnInit {
         next: (data) => {
           this.absencesAll = data;
           this.absencesDuJour = data.filter(abs => this.isToday(new Date(abs.date)));
+
+          // Calcul stats
+          this.totalAbsences = data.filter(abs => abs.statut === 'ABSENT').length;
+          this.totalRetards = data.filter(abs => abs.statut === 'RETARD').length;
         },
         error: err => console.error('Erreur lors du chargement des absences :', err)
       });
@@ -37,6 +47,10 @@ export class DashboardAdminComponent implements OnInit {
         next: (data) => {
           this.justificationsAll = data;
           this.justificationsDuJour = data.filter(j => this.isToday(new Date(j.dateSoumission)));
+
+          // Calcul stats
+          this.totalJustifications = data.length;
+          this.totalJustificationsDuJour = this.justificationsDuJour.length;
         },
         error: err => console.error('Erreur lors du chargement des justifications :', err)
       });
@@ -50,7 +64,7 @@ export class DashboardAdminComponent implements OnInit {
   }
 
   logout(): void {
-    localStorage.clear(); // ou removeItem('token') si tu stockes un token
-    window.location.href = '/login'; // ou navigate via Router
+    localStorage.clear();
+    window.location.href = '/login';
   }
 }
