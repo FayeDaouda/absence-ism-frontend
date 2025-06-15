@@ -1,6 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
+interface Absence {
+  _id: any;
+  date: { $date: { $numberLong: string } };
+  heureDebut: any;
+  heureFin: any;
+  statut: string;        // correspond à "type" dans le template
+  etudiantId: string;
+  nomEtudiant?: string;
+  prenomEtudiant?: string;
+  classeEtudiant?: string;
+  justificationId?: string | null;
+}
+
+interface Justification {
+  _id: any;
+  etudiantId: string;
+  nomCompletEtudiant?: string;
+  classeEtudiant?: string;
+  statut: string;
+  dateSoumission?: { $date: { $numberLong: string } };
+  // autres champs selon backend
+}
+
 @Component({
   selector: 'app-dashboard-admin',
   templateUrl: './dashboard-admin.component.html',
@@ -8,16 +31,14 @@ import { HttpClient } from '@angular/common/http';
 })
 export class DashboardAdminComponent implements OnInit {
 
-  absencesAll: any[] = [];
-  justificationsAll: any[] = [];
-  absencesDuJour: any[] = [];
-  justificationsDuJour: any[] = [];
+  absencesAll: Absence[] = [];
+  justificationsAll: Justification[] = [];
 
-  // Nouveaux champs pour stats
+  absencesDuJour: Absence[] = [];
+  justificationsDuJour: Justification[] = [];
+
   totalAbsences = 0;
   totalRetards = 0;
-  totalJustifications = 0;
-  totalJustificationsDuJour = 0;
 
   constructor(private http: HttpClient) {}
 
@@ -26,31 +47,44 @@ export class DashboardAdminComponent implements OnInit {
     this.loadJustifications();
   }
 
+  private parseMongoDate(dateObj: any): Date {
+    try {
+      return new Date(dateObj?.$date?.$numberLong);
+    } catch {
+      return new Date();
+    }
+  }
+
   loadAbsences(): void {
-    this.http.get<any[]>('https://absence-ism-backend.onrender.com/api/absences')
+    this.http.get<Absence[]>('https://absence-ism-backend.onrender.com/api/absences')
       .subscribe({
         next: (data) => {
-          this.absencesAll = data;
-          this.absencesDuJour = data.filter(abs => this.isToday(new Date(abs.date)));
+          this.absencesAll = data.map(abs => ({
+            ...abs,
+            type: abs.statut,
+            justifiee: !!abs.justificationId,
+            dateParsed: this.parseMongoDate(abs.date)
+          }));
 
-          // Calcul stats
-          this.totalAbsences = data.filter(abs => abs.statut === 'PRESENT').length;
-          this.totalRetards = data.filter(abs => abs.statut === 'RETARD').length;
+          this.absencesDuJour = this.absencesAll.filter(abs => this.isToday(abs.dateParsed));
+
+          this.totalAbsences = this.absencesAll.length;
+          this.totalRetards = this.absencesAll.filter(abs => abs.statut === 'RETARD').length;
         },
         error: err => console.error('Erreur lors du chargement des absences :', err)
       });
   }
 
   loadJustifications(): void {
-    this.http.get<any[]>('https://gestion-absence-ism-dev.onrender.com/api/justification-web')
+    this.http.get<Justification[]>('https://absence-ism-backend.onrender.com/api/justifications')
       .subscribe({
         next: (data) => {
-          this.justificationsAll = data;
-          this.justificationsDuJour = data.filter(j => this.isToday(new Date(j.dateSoumission)));
+          this.justificationsAll = data.map(j => ({
+            ...j,
+            dateSoumissionParsed: j.dateSoumission ? this.parseMongoDate(j.dateSoumission) : null
+          }));
 
-          // Calcul stats
-          this.totalJustifications = data.length;
-          this.totalJustificationsDuJour = this.justificationsDuJour.length;
+         
         },
         error: err => console.error('Erreur lors du chargement des justifications :', err)
       });
@@ -67,4 +101,5 @@ export class DashboardAdminComponent implements OnInit {
     localStorage.clear();
     window.location.href = '/login';
   }
+
 }
