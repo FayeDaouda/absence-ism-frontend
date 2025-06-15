@@ -45,8 +45,9 @@
             <div>
               <p><strong>{{ a.nomEtudiant }}</strong> {{ a.prenomEtudiant }}<br />
                 <strong>{{ a.classeEtudiant }}</strong></p>
+              <p class="text-gray-500 text-xs">{{ a.dateParsed | date:'dd/MM/yyyy HH:mm' }}</p>
             </div>
-            <div class="flex justify-between text-sm">
+            <div class="flex justify-between text-sm items-center">
               <p class="text-red-600 font-semibold mr-3">{{ a.type }}</p>
               <p class="text-gray-500">{{ a.justifiee ? 'Justifiée' : 'Non justifiée' }}</p>
             </div>

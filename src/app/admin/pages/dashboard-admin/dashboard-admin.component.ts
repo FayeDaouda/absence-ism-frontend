@@ -1,17 +1,22 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
 
 interface Absence {
   _id: any;
   date: { $date: { $numberLong: string } };
   heureDebut: any;
   heureFin: any;
-  statut: string;        // correspond à "type" dans le template
+  statut: string;         // 'PRESENT', 'RETARD', etc.
   etudiantId: string;
   nomEtudiant?: string;
   prenomEtudiant?: string;
   classeEtudiant?: string;
   justificationId?: string | null;
+  // Champs calculés ajoutés côté client
+  type?: string;
+  justifiee?: boolean;
+  dateParsed?: Date;
 }
 
 interface Justification {
@@ -21,11 +26,14 @@ interface Justification {
   classeEtudiant?: string;
   statut: string;
   dateSoumission?: { $date: { $numberLong: string } };
-  // autres champs selon backend
+  // Champs calculés côté client
+  dateSoumissionParsed?: Date | null;
 }
 
 @Component({
   selector: 'app-dashboard-admin',
+  standalone: true,             // <-- active standalone
+  imports: [CommonModule, HttpClientModule],  // <-- importe ce dont tu as besoin
   templateUrl: './dashboard-admin.component.html',
   styleUrls: ['./dashboard-admin.component.css']
 })
@@ -39,6 +47,8 @@ export class DashboardAdminComponent implements OnInit {
 
   totalAbsences = 0;
   totalRetards = 0;
+  totalJustifications = 0;
+  totalJustificationsDuJour = 0;
 
   constructor(private http: HttpClient) {}
 
@@ -49,7 +59,10 @@ export class DashboardAdminComponent implements OnInit {
 
   private parseMongoDate(dateObj: any): Date {
     try {
-      return new Date(dateObj?.$date?.$numberLong);
+      if (dateObj && dateObj.$date && dateObj.$date.$numberLong) {
+        return new Date(parseInt(dateObj.$date.$numberLong, 10));
+      }
+      return new Date();
     } catch {
       return new Date();
     }
@@ -66,7 +79,7 @@ export class DashboardAdminComponent implements OnInit {
             dateParsed: this.parseMongoDate(abs.date)
           }));
 
-          this.absencesDuJour = this.absencesAll.filter(abs => this.isToday(abs.dateParsed));
+          this.absencesDuJour = this.absencesAll.filter(abs => this.isToday(abs.dateParsed!));
 
           this.totalAbsences = this.absencesAll.length;
           this.totalRetards = this.absencesAll.filter(abs => abs.statut === 'RETARD').length;
@@ -84,7 +97,12 @@ export class DashboardAdminComponent implements OnInit {
             dateSoumissionParsed: j.dateSoumission ? this.parseMongoDate(j.dateSoumission) : null
           }));
 
-         
+          this.justificationsDuJour = this.justificationsAll.filter(j =>
+            j.dateSoumissionParsed ? this.isToday(j.dateSoumissionParsed) : false
+          );
+
+          this.totalJustifications = this.justificationsAll.length;
+          this.totalJustificationsDuJour = this.justificationsDuJour.length;
         },
         error: err => console.error('Erreur lors du chargement des justifications :', err)
       });
