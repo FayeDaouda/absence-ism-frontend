@@ -59,6 +59,15 @@ export class DashboardAdminComponent implements OnInit {
 
   absencesDuJour: Absence[] = [];
   justificationsDuJour: Justification[] = [];
+  // getter calculé pour les présences (statut = "PRESENT")
+get totalPresences(): number {
+  return this.absencesAll.filter(a => a.statut === 'PRESENT').length;
+}
+
+// getter calculé pour les absences (statut = "ABSENT")
+get totalAbsents(): number {
+  return this.absencesAll.filter(a => a.statut === 'ABSENT').length;
+}
 
   totalAbsences = 0;
   totalRetards = 0;
