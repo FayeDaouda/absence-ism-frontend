@@ -34,7 +34,7 @@ export class DashboardAdminComponent implements OnInit {
           this.absencesDuJour = data.filter(abs => this.isToday(new Date(abs.date)));
 
           // Calcul stats
-          this.totalAbsences = data.filter(abs => abs.statut === 'ABSENT').length;
+          this.totalAbsences = data.filter(abs => abs.statut === 'PRESENT').length;
           this.totalRetards = data.filter(abs => abs.statut === 'RETARD').length;
         },
         error: err => console.error('Erreur lors du chargement des absences :', err)
