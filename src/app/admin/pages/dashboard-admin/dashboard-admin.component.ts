@@ -2,6 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 
+interface Utilisateur {
+  id: string;
+  nom: string;
+  prenom: string;
+  email: string;
+  role: string;       // 'ETUDIANT', 'ADMIN', 'VIGILE', etc.
+  photo?: string;
+  matricule: string;
+  classeId: string;
+  etat: string;
+}
+
 interface Absence {
   _id: any;
   date: { $date: { $numberLong: string } };
@@ -32,12 +44,15 @@ interface Justification {
 
 @Component({
   selector: 'app-dashboard-admin',
-  standalone: true,             // <-- active standalone
-  imports: [CommonModule, HttpClientModule],  // <-- importe ce dont tu as besoin
+  standalone: true,
+  imports: [CommonModule, HttpClientModule],
   templateUrl: './dashboard-admin.component.html',
   styleUrls: ['./dashboard-admin.component.css']
 })
 export class DashboardAdminComponent implements OnInit {
+
+  utilisateursAll: Utilisateur[] = [];
+  utilisateurMap = new Map<string, Utilisateur>();
 
   absencesAll: Absence[] = [];
   justificationsAll: Justification[] = [];
@@ -53,8 +68,7 @@ export class DashboardAdminComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.loadAbsences();
-    this.loadJustifications();
+    this.loadUtilisateurs();  // On charge d'abord les utilisateurs
   }
 
   private parseMongoDate(dateObj: any): Date {
@@ -68,16 +82,35 @@ export class DashboardAdminComponent implements OnInit {
     }
   }
 
+  loadUtilisateurs(): void {
+    this.http.get<Utilisateur[]>('https://absence-ism-backend.onrender.com/api/utilisateurs')
+      .subscribe({
+        next: (data) => {
+          this.utilisateursAll = data;
+          this.utilisateurMap = new Map(data.map(u => [u.id, u]));
+          this.loadAbsences();
+          this.loadJustifications();
+        },
+        error: err => console.error('Erreur lors du chargement des utilisateurs :', err)
+      });
+  }
+
   loadAbsences(): void {
     this.http.get<Absence[]>('https://absence-ism-backend.onrender.com/api/absences')
       .subscribe({
         next: (data) => {
-          this.absencesAll = data.map(abs => ({
-            ...abs,
-            type: abs.statut,
-            justifiee: !!abs.justificationId,
-            dateParsed: this.parseMongoDate(abs.date)
-          }));
+          this.absencesAll = data.map(abs => {
+            const user = this.utilisateurMap.get(abs.etudiantId);
+            return {
+              ...abs,
+              type: abs.statut,
+              justifiee: !!abs.justificationId,
+              dateParsed: this.parseMongoDate(abs.date),
+              nomEtudiant: user?.nom,
+              prenomEtudiant: user?.prenom,
+              classeEtudiant: user?.classeId,
+            };
+          });
 
           this.absencesDuJour = this.absencesAll.filter(abs => this.isToday(abs.dateParsed!));
 
