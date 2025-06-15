@@ -20,24 +20,26 @@ export class DashboardAdminComponent implements OnInit {
     this.loadJustifications();
   }
 
-  loadAbsences() {
-    this.http.get<any[]>('https://absence-ism-backend.onrender.com/api/absences').subscribe({
-      next: (data) => {
-        this.absencesAll = data;
-        this.absencesDuJour = data.filter(absence => this.isToday(new Date(absence.date)));
-      },
-      error: err => console.error(err)
-    });
+  loadAbsences(): void {
+    this.http.get<any[]>('https://gestion-absence-ism-dev.onrender.com/api/absence-web')
+      .subscribe({
+        next: (data) => {
+          this.absencesAll = data;
+          this.absencesDuJour = data.filter(abs => this.isToday(new Date(abs.date)));
+        },
+        error: err => console.error('Erreur lors du chargement des absences :', err)
+      });
   }
 
-  loadJustifications() {
-    this.http.get<any[]>('https://absence-ism-backend.onrender.com/api/justifications').subscribe({
-      next: (data) => {
-        this.justificationsAll = data;
-        this.justificationsDuJour = data.filter(justif => this.isToday(new Date(justif.dateSoumission)));
-      },
-      error: err => console.error(err)
-    });
+  loadJustifications(): void {
+    this.http.get<any[]>('https://gestion-absence-ism-dev.onrender.com/api/justification-web')
+      .subscribe({
+        next: (data) => {
+          this.justificationsAll = data;
+          this.justificationsDuJour = data.filter(j => this.isToday(new Date(j.dateSoumission)));
+        },
+        error: err => console.error('Erreur lors du chargement des justifications :', err)
+      });
   }
 
   isToday(date: Date): boolean {
@@ -47,4 +49,8 @@ export class DashboardAdminComponent implements OnInit {
            date.getFullYear() === today.getFullYear();
   }
 
+  logout(): void {
+    localStorage.clear(); // ou removeItem('token') si tu stockes un token
+    window.location.href = '/login'; // ou navigate via Router
+  }
 }

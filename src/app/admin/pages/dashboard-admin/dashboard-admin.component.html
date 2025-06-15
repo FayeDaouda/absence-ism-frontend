@@ -1,9 +1,25 @@
+<!-- ✅ Navbar -->
+<nav class="bg-[#5c3b28] text-white px-6 py-4 shadow-md flex items-center justify-between">
+  <div class="text-xl font-bold">🎓 ISM - Admin</div>
+
+  <ul class="hidden md:flex space-x-6 text-sm">
+    <li><a routerLink="/admin/dashboard" routerLinkActive="font-bold border-b-2 border-white" class="hover:underline">Dashboard</a></li>
+    <li><a routerLink="/admin/absences" routerLinkActive="font-bold border-b-2 border-white" class="hover:underline">Absences</a></li>
+    <li><a routerLink="/admin/justifications" routerLinkActive="font-bold border-b-2 border-white" class="hover:underline">Justifications</a></li>
+    <li><a routerLink="/admin/etudiants" routerLinkActive="font-bold border-b-2 border-white" class="hover:underline">Étudiants</a></li>
+  </ul>
+
+  <button (click)="logout()" class="bg-white text-[#5c3b28] px-3 py-1 rounded hover:bg-gray-100 text-sm">
+    Se déconnecter
+  </button>
+</nav>
+
+<!-- ✅ Contenu principal -->
 <div class="min-h-screen py-10 px-8">
   <!-- Statistiques principales -->
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
     <div class="bg-[#5c3b28] text-white p-6 text-center rounded-2xl shadow-lg">
       <h2 class="text-base font-semibold mb-2">👥 Présence du jour</h2>
-      <!-- Exemple fixe pour Présence (à adapter si tu as la donnée) -->
       <p class="text-2xl font-extrabold">10</p>
     </div>
 
