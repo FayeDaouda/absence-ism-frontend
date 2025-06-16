@@ -23,10 +23,9 @@
   
         <h1 class="text-2xl font-bold mb-6">Liste des étudiants</h1>
   
+        <!-- Filtres -->
         <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 mb-6">
-          <label for="select-classe" class="sr-only">Filtrer par classe</label>
           <select
-            id="select-classe"
             [(ngModel)]="classeSelectionnee"
             (change)="filtrerParClasse()"
             class="border rounded px-3 py-2"
@@ -35,9 +34,7 @@
             <option *ngFor="let c of classes" [value]="c.id">{{ c.nom }}</option>
           </select>
   
-          <label for="input-matricule" class="sr-only">Recherche par matricule</label>
           <input
-            id="input-matricule"
             type="text"
             placeholder="Recherche par matricule"
             [(ngModel)]="matriculeRecherche"
@@ -47,6 +44,7 @@
           />
         </div>
   
+        <!-- Tableau des étudiants -->
         <table class="w-full border-collapse border border-gray-300">
           <thead>
             <tr class="bg-gray-100">
@@ -63,10 +61,18 @@
               <td class="border border-gray-300 px-3 py-2">{{ etu.prenom }}</td>
               <td class="border border-gray-300 px-3 py-2">{{ etu.matricule }}</td>
               <td class="border border-gray-300 px-3 py-2">{{ getNomClasse(etu.classeId) }}</td>
-              <td class="border border-gray-300 px-3 py-2">{{ etu.etat }}</td>
+              <td class="border border-gray-300 px-3 py-2">
+                <span [ngClass]="{
+                  'text-green-600 font-semibold': etu.etat === 'A_JOUR',
+                  'text-red-600 font-semibold': etu.etat === 'PAS_A_JOUR'
+                }">
+                  {{ etu.etat === 'A_JOUR' ? 'À JOUR' : 'PAS À JOUR' }}
+                </span>
+              </td>
             </tr>
+  
             <tr *ngIf="etudiants.length === 0">
-              <td class="border border-gray-300 px-3 py-2 text-center" colspan="5">
+              <td colspan="5" class="border border-gray-300 px-3 py-4 text-center text-gray-500 italic">
                 Aucun étudiant trouvé.
               </td>
             </tr>
@@ -74,7 +80,6 @@
         </table>
   
       </div>
-  
     </main>
   </div>
   

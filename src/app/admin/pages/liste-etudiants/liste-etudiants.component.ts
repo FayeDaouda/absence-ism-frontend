@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common'; // ✅ AJOUTÉ
 import { UtilisateurService } from '../../../services/utilisateur.service';
 import { ClasseService, Classe } from '../../../services/classe.service';
 import { Utilisateur } from '../../../models/utilisateur.model';
-import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-liste-etudiants',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],  // ✅ AJOUTÉ CommonModule
   templateUrl: './liste-etudiants.component.html',
   styleUrls: ['./liste-etudiants.component.css']
 })
@@ -104,4 +105,8 @@ export class ListeEtudiantsComponent implements OnInit {
     localStorage.clear();
     window.location.href = '/login';
   }
+  trackById(index: number, item: Utilisateur): string {
+    return item.id;
+  }
+  
 }
