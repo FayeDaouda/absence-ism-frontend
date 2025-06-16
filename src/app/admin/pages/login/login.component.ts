@@ -33,5 +33,25 @@ export class LoginComponent {
       }
     });
   }
+  togglePassword() {
+    const passwordInput = document.getElementById('password') as HTMLInputElement;
+    const toggleButton = document.querySelector('.password-toggle') as HTMLButtonElement;
+  
+    if (passwordInput && toggleButton) {
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleButton.textContent = '🙈';
+      } else {
+        passwordInput.type = 'password';
+        toggleButton.textContent = '👁️';
+      }
+    }
+  }
+  
+  onForgotPassword(event: Event) {
+    event.preventDefault();
+    alert('Fonctionnalité de récupération de mot de passe à implémenter');
+  }
+  
   
 }
