@@ -25,24 +25,38 @@ export class JustificationDetailComponent implements OnInit {
   }
 
   loadJustification() {
-    this.http.get(`https://gestion-absence-ism-dev.onrender.com/api/justification-web/${this.justificationId}`)
+    this.http.get<any>(`https://gestion-absence-ism-dev.onrender.com/api/justification-web/${this.justificationId}`)
       .subscribe({
-        next: (data: any) => {
+        next: data => {
           this.justification = {
             ...data,
             dateSoumissionParsed: data.dateSoumission ? new Date(data.dateSoumission) : null,
           };
+  
+          if (this.justification.etudiantId) {
+            this.http.get<any>(`https://gestion-absence-ism-dev.onrender.com/api/etudiant-web/${this.justification.etudiantId}`)
+              .subscribe({
+                next: etu => {
+                  this.justification.nomCompletEtudiant = `${etu.nom} ${etu.prenom}`;
+                  this.justification.matriculeEtudiant = etu.matricule;
+                  this.justification.classeEtudiant = etu.classeId;
+                },
+                error: err => console.error('Erreur chargement étudiant:', err)
+              });
+          }
         },
         error: err => console.error('Erreur de chargement justification :', err)
       });
   }
+  
 
   validerJustification() {
     this.http.put(`https://gestion-absence-ism-dev.onrender.com/api/justification-web/${this.justificationId}/valider`, null)
       .subscribe({
         next: () => {
           alert('Justification validée.');
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/admin/dashboard-admin']);
+
         },
         error: err => alert('Erreur validation : ' + err.message)
       });
@@ -53,7 +67,8 @@ export class JustificationDetailComponent implements OnInit {
       .subscribe({
         next: () => {
           alert('Justification refusée.');
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/admin/dashboard-admin']);
+
         },
         error: err => alert('Erreur refus : ' + err.message)
       });
