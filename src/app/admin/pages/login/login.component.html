@@ -1,68 +1,12 @@
-<div class="login-card">
-    <div class="left-section">
-      <div class="logo-container">
-        <div class="graduation-cap">
-          <div class="cap-top">
-            <div class="tassel"></div>
-          </div>
-          <div class="cap-base"></div>
-        </div>
-      </div>
-      <h1 class="system-title">Système de Gestion des<br>Absences</h1>
-    </div>
-  
-    <div class="right-section">
-      <div class="institution-logo">
-        <div class="grid-pattern">
-          <div class="grid-cell" *ngFor="let cell of [].constructor(12)"></div>
-        </div>
-        <div style="font-size: 10px; margin-top: 5px;">ISM</div>
-      </div>
-  
-      <h2 class="connection-title">Connexion</h2>
-  
-      <form (ngSubmit)="onSubmit()">
-        <div class="form-group">
-          <label class="form-label">Email ou Identifiant</label>
-          <input
-            type="email"
-            class="form-input"
-            placeholder="nom@exemple.com"
-            [(ngModel)]="email"
-            name="email"
-            required
-          />
-        </div>
-  
-        <div class="form-group">
-          <label class="form-label">Mot de passe</label>
-          <div class="password-container">
-            <input
-              type="password"
-              class="form-input"
-              placeholder="••••••••"
-              [(ngModel)]="motDePasse"
-              name="motDePasse"
-              id="password"
-              required
-            />
-            <button type="button" class="password-toggle" (click)="togglePassword()">👁️</button>
-          </div>
-        </div>
-  
-        <button type="submit" class="login-button">
-          <svg class="lock-icon" viewBox="0 0 24 24">
-            <path d="M12 1L3 5V11C3 16.55 6.84 21.74 12 23C17.16 21.74 21 16.55 21 11V5L12 1M12 7C13.4 7 14.8 8.6 14.8 10V11H9.2V10C9.2 8.6 10.6 7 12 7M8 13V21H16V13H8Z"/>
-          </svg>
-          Se connecter
-        </button>
+<div class="login-container">
+    <h2>Connexion Admin</h2>
+    <form (ngSubmit)="onSubmit()">
+        <input type="email" [(ngModel)]="email" placeholder="Email" name="email" required />
+        <input type="password" [(ngModel)]="motDePasse" placeholder="Mot de passe" name="motDePasse" required />
+        <button type="submit">Se connecter</button>
       </form>
-  
-      <div class="forgot-password">
-        <a href="#" (click)="onForgotPassword($event)">Mot de passe oublié? Cliquez ici</a>
-      </div>
-  
+      
       <p *ngIf="erreurMessage" class="error">{{ erreurMessage }}</p>
-    </div>
+
   </div>
   
