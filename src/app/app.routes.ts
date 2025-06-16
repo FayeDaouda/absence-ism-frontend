@@ -4,6 +4,8 @@ import { DashboardAdminComponent } from './admin/pages/dashboard-admin/dashboard
 import { ListeEtudiantsComponent } from './admin/pages/liste-etudiants/liste-etudiants.component';
 import { JustificationDetailComponent } from './admin/pages/justification-detail/justification-detail.component';
 import { AdminLayoutComponent } from './admin/layout/admin-layout/admin-layout.component';
+import { ListeAbsencesComponent } from './admin/pages/liste-absences/liste-absences.component';
+
 
 export const routes: Routes = [
   { path: 'admin/login', component: LoginComponent },
@@ -15,6 +17,7 @@ export const routes: Routes = [
       { path: 'dashboard-admin', component: DashboardAdminComponent },
       { path: 'liste-etudiants', component: ListeEtudiantsComponent },
       { path: 'justifications/:id', component: JustificationDetailComponent },
+      { path: 'absences', component: ListeAbsencesComponent },
       // autres routes admin ici
     ]
   },

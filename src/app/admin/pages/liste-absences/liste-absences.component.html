@@ -1,0 +1,40 @@
+<div class="max-w-6xl mx-auto bg-white rounded-2xl shadow-md p-8">
+    <h1 class="text-2xl font-bold text-[#5c3b28] mb-6">❌ Absences du jour</h1>
+  
+    <div class="overflow-x-auto">
+      <table class="min-w-full border border-gray-300 rounded overflow-hidden">
+        <thead class="bg-[#f5f5f5]">
+          <tr>
+            <th class="border px-4 py-2 text-left">Nom</th>
+            <th class="border px-4 py-2 text-left">Prénom</th>
+            <th class="border px-4 py-2 text-left">Classe</th>
+            <th class="border px-4 py-2 text-left">Date</th>
+            <th class="border px-4 py-2 text-left">Type</th>
+            <th class="border px-4 py-2 text-left">Justification</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let abs of absencesDuJour" class="hover:bg-orange-50 transition">
+            <td class="border px-4 py-2">{{ abs.nomEtudiant }}</td>
+            <td class="border px-4 py-2">{{ abs.prenomEtudiant }}</td>
+            <td class="border px-4 py-2">{{ abs.classeEtudiant }}</td>
+            <td class="border px-4 py-2">{{ abs.dateParsed | date:'dd/MM/yyyy' }}</td>
+            <td class="border px-4 py-2">{{ abs.statut }}</td>
+            <td class="border px-4 py-2">
+              <span [ngClass]="{
+                'text-green-600 font-semibold': abs.justifiee,
+                'text-red-600 font-semibold': !abs.justifiee
+              }">
+                {{ abs.justifiee ? 'Justifiée' : 'Non justifiée' }}
+              </span>
+            </td>
+          </tr>
+  
+          <tr *ngIf="absencesDuJour.length === 0">
+            <td colspan="6" class="text-center py-4 text-gray-500 italic">Aucune absence pour aujourd’hui.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
