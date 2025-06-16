@@ -1,0 +1,80 @@
+<div class="min-h-screen flex">
+
+    <!-- Sidebar gauche -->
+    <aside class="w-64 bg-[#5c3b28] text-white flex flex-col py-6 px-4 shadow-lg">
+      <h2 class="text-2xl font-bold mb-8 text-center">Admin ISM</h2>
+  
+      <nav class="flex-1 space-y-4">
+        <a routerLink="/admin/dashboard-admin" routerLinkActive="font-bold" class="block px-2 py-2 rounded hover:bg-[#40291c] transition">📊 Dashboard</a>
+        <a routerLink="/admin/liste-etudiants" routerLinkActive="font-bold" class="block px-2 py-2 rounded hover:bg-[#40291c] transition">🎓 Étudiants</a>
+        <a routerLink="/admin/absences" routerLinkActive="font-bold" class="block px-2 py-2 rounded hover:bg-[#40291c] transition">❌ Absences</a>
+        <a routerLink="/admin/justifications" routerLinkActive="font-bold" class="block px-2 py-2 rounded hover:bg-[#40291c] transition">📄 Justifications</a>
+      </nav>
+  
+      <button (click)="logout()" class="mt-8 bg-red-600 hover:bg-red-700 text-white py-2 rounded transition">
+        Se déconnecter
+      </button>
+    </aside>
+  
+    <!-- Contenu principal -->
+    <main class="flex-1 py-10 px-8 bg-gray-50">
+  
+      <div class="max-w-5xl mx-auto p-6 bg-white rounded shadow">
+  
+        <h1 class="text-2xl font-bold mb-6">Liste des étudiants</h1>
+  
+        <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 mb-6">
+          <label for="select-classe" class="sr-only">Filtrer par classe</label>
+          <select
+            id="select-classe"
+            [(ngModel)]="classeSelectionnee"
+            (change)="filtrerParClasse()"
+            class="border rounded px-3 py-2"
+          >
+            <option value="">Toutes les classes</option>
+            <option *ngFor="let c of classes" [value]="c.id">{{ c.nom }}</option>
+          </select>
+  
+          <label for="input-matricule" class="sr-only">Recherche par matricule</label>
+          <input
+            id="input-matricule"
+            type="text"
+            placeholder="Recherche par matricule"
+            [(ngModel)]="matriculeRecherche"
+            (input)="filtrerParMatricule()"
+            class="border rounded px-3 py-2 flex-grow"
+            autocomplete="off"
+          />
+        </div>
+  
+        <table class="w-full border-collapse border border-gray-300">
+          <thead>
+            <tr class="bg-gray-100">
+              <th class="border border-gray-300 px-3 py-2 text-left">Nom</th>
+              <th class="border border-gray-300 px-3 py-2 text-left">Prénom</th>
+              <th class="border border-gray-300 px-3 py-2 text-left">Matricule</th>
+              <th class="border border-gray-300 px-3 py-2 text-left">Classe</th>
+              <th class="border border-gray-300 px-3 py-2 text-left">État</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let etu of etudiants; trackBy: trackById">
+              <td class="border border-gray-300 px-3 py-2">{{ etu.nom }}</td>
+              <td class="border border-gray-300 px-3 py-2">{{ etu.prenom }}</td>
+              <td class="border border-gray-300 px-3 py-2">{{ etu.matricule }}</td>
+              <td class="border border-gray-300 px-3 py-2">{{ getNomClasse(etu.classeId) }}</td>
+              <td class="border border-gray-300 px-3 py-2">{{ etu.etat }}</td>
+            </tr>
+            <tr *ngIf="etudiants.length === 0">
+              <td class="border border-gray-300 px-3 py-2 text-center" colspan="5">
+                Aucun étudiant trouvé.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+  
+      </div>
+  
+    </main>
+  </div>
+  
