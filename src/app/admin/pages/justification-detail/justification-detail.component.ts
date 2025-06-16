@@ -23,6 +23,7 @@ export class JustificationDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.justificationId = this.route.snapshot.paramMap.get('id')!;
+    console.log('justificationId reçu:', this.justificationId);
     this.loadJustification();
   }
 
