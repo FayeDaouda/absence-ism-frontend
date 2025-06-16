@@ -1,12 +1,41 @@
-<div class="login-container">
-    <h2>Connexion Admin</h2>
-    <form (ngSubmit)="onSubmit()">
-        <input type="email" [(ngModel)]="email" placeholder="Email" name="email" required />
-        <input type="password" [(ngModel)]="motDePasse" placeholder="Mot de passe" name="motDePasse" required />
-        <button type="submit">Se connecter</button>
+<div class="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 border border-gray-200">
+      <h2 class="text-2xl font-bold text-[#5c3b28] mb-6 text-center">🔐 Connexion Admin</h2>
+  
+      <form (ngSubmit)="onSubmit()" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+          <input
+            type="email"
+            name="email"
+            [(ngModel)]="email"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#5c3b28]"
+            placeholder="admin@ism.sn"
+          />
+        </div>
+  
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Mot de passe</label>
+          <input
+            type="password"
+            name="motDePasse"
+            [(ngModel)]="motDePasse"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#5c3b28]"
+            placeholder="••••••••"
+          />
+        </div>
+  
+        <button
+          type="submit"
+          class="w-full bg-[#5c3b28] text-white py-2 rounded-lg font-semibold hover:bg-[#40291c] transition"
+        >
+          Se connecter
+        </button>
+  
+        <p *ngIf="erreurMessage" class="text-red-600 text-sm text-center mt-2">{{ erreurMessage }}</p>
       </form>
-      
-      <p *ngIf="erreurMessage" class="error">{{ erreurMessage }}</p>
-
+    </div>
   </div>
   

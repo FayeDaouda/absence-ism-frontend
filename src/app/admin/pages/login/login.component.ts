@@ -1,22 +1,19 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';  // <-- important
+import { FormsModule } from '@angular/forms';  // Pour [(ngModel)]
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-login',
-  standalone: true,               // <-- standalone component
-  imports: [FormsModule],         // <-- importer FormsModule ici
+  standalone: true,
+  imports: [FormsModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
   email = '';
   motDePasse = '';
- 
-
-
-  erreurMessage: string | null = null; 
+  erreurMessage: string | null = null;
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -33,25 +30,4 @@ export class LoginComponent {
       }
     });
   }
-  togglePassword() {
-  const passwordInput = document.getElementById('password') as HTMLInputElement;
-  const toggleButton = document.querySelector('.password-toggle') as HTMLButtonElement;
-
-  if (passwordInput && toggleButton) {
-    if (passwordInput.type === 'password') {
-      passwordInput.type = 'text';
-      toggleButton.textContent = '🙈';
-    } else {
-      passwordInput.type = 'password';
-      toggleButton.textContent = '👁️';
-    }
-  }
-}
-
-onForgotPassword(event: Event) {
-  event.preventDefault();
-  alert('Fonctionnalité de récupération de mot de passe à implémenter');
-}
-
-  
 }
