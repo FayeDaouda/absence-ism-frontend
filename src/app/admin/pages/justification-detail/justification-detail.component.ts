@@ -11,7 +11,9 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 })
 export class JustificationDetailComponent implements OnInit {
   justificationId!: string;
-  justification: any;
+  justification: any = null;
+
+  private baseUrl = 'https://absence-ism-backend.onrender.com/api';
 
   constructor(
     private route: ActivatedRoute,
@@ -25,52 +27,63 @@ export class JustificationDetailComponent implements OnInit {
   }
 
   loadJustification() {
-    this.http.get<any>(`https://gestion-absence-ism-dev.onrender.com/api/justification-web/${this.justificationId}`)
+    this.http.get<any>(`${this.baseUrl}/justifications/${this.justificationId}`)
       .subscribe({
-        next: data => {
+        next: (data) => {
+          console.log('Justification reçue:', data);
           this.justification = {
             ...data,
             dateSoumissionParsed: data.dateSoumission ? new Date(data.dateSoumission) : null,
           };
-  
+
           if (this.justification.etudiantId) {
-            this.http.get<any>(`https://gestion-absence-ism-dev.onrender.com/api/etudiant-web/${this.justification.etudiantId}`)
-              .subscribe({
-                next: etu => {
-                  this.justification.nomCompletEtudiant = `${etu.nom} ${etu.prenom}`;
-                  this.justification.matriculeEtudiant = etu.matricule;
-                  this.justification.classeEtudiant = etu.classeId;
-                },
-                error: err => console.error('Erreur chargement étudiant:', err)
-              });
+            this.loadEtudiantInfo(this.justification.etudiantId);
           }
         },
-        error: err => console.error('Erreur de chargement justification :', err)
+        error: (err) => {
+          console.error('Erreur de chargement justification :', err);
+          alert('Erreur lors du chargement de la justification');
+        }
       });
   }
-  
+
+  loadEtudiantInfo(etudiantId: string) {
+    this.http.get<any>(`${this.baseUrl}/etudiants/${etudiantId}`)
+      .subscribe({
+        next: (etu) => {
+          this.justification.nomCompletEtudiant = `${etu.nom} ${etu.prenom}`;
+          this.justification.matriculeEtudiant = etu.matricule;
+          this.justification.classeEtudiant = etu.classeId;
+        },
+        error: (err) => {
+          console.error('Erreur chargement étudiant:', err);
+        }
+      });
+  }
 
   validerJustification() {
-    this.http.put(`https://gestion-absence-ism-dev.onrender.com/api/justification-web/${this.justificationId}/valider`, null)
+    this.http.put(`${this.baseUrl}/justifications/valider/${this.justificationId}`, null)
       .subscribe({
         next: () => {
           alert('Justification validée.');
           this.router.navigate(['/admin/dashboard-admin']);
-
         },
-        error: err => alert('Erreur validation : ' + err.message)
+        error: (err) => {
+          alert('Erreur validation : ' + err.message);
+        }
       });
   }
 
   refuserJustification() {
-    this.http.put(`https://gestion-absence-ism-dev.onrender.com/api/justification-web/${this.justificationId}/refuser`, null)
+    this.http.put(`${this.baseUrl}/justifications/refuser/${this.justificationId}`, null)
       .subscribe({
         next: () => {
           alert('Justification refusée.');
           this.router.navigate(['/admin/dashboard-admin']);
-
         },
-        error: err => alert('Erreur refus : ' + err.message)
+        error: (err) => {
+          alert('Erreur refus : ' + err.message);
+        }
       });
   }
 }
