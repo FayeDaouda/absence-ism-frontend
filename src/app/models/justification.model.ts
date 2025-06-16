@@ -1,5 +1,5 @@
 export interface Justification {
-    _id?: string;                          // Correspond à l'ID Mongo (_id)
+    id: string;                         // Correspond à l'ID Mongo (_id)
     dateSoumission?: string;              // Format ISO 8601 string (ex: "2025-06-12T00:00:00.000+00:00")
     motif?: string;                       // Le texte du motif
     fichiers?: string[];                  // URLs des fichiers justificatifs

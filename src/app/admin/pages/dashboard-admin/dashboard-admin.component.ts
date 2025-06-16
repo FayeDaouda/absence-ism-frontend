@@ -33,7 +33,7 @@ interface Absence {
 }
 
 interface Justification {
-  _id: any;
+  id: any;
   etudiantId: string;
   statut: string;
   dateSoumission?: { $date: { $numberLong: string } };
@@ -147,7 +147,6 @@ export class DashboardAdminComponent implements OnInit {
             const user = this.utilisateurMap.get(j.etudiantId);
             return {
               ...j,
-              _id: j._id ,  // <-- Assure que _id est bien défini
               dateSoumissionParsed: j.dateSoumission ? this.parseMongoDate(j.dateSoumission) : null,
               nomCompletEtudiant: user ? `${user.nom} ${user.prenom}` : '',
               classeEtudiant: user?.classeId || '',
