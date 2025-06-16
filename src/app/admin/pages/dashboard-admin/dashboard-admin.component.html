@@ -17,6 +17,7 @@
 
   <!-- Contenu principal -->
   <main class="flex-1 py-10 px-8 bg-gray-50">
+
     <!-- Statistiques principales -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
       <div class="bg-[#5c3b28] text-white p-6 text-center rounded-2xl shadow-lg">
@@ -35,7 +36,9 @@
       </div>
     </div>
 
+    <!-- Sections Absences + Justifications -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
+
       <!-- Absences -->
       <div class="bg-white rounded-2xl shadow-md border border-[#ddd] p-6 flex flex-col h-full">
         <h3 class="text-xl font-bold text-[#5c3b28] mb-4">⏳ Absences</h3>
@@ -43,12 +46,12 @@
         <div class="space-y-4 text-sm overflow-y-auto max-h-[300px] pr-2">
           <div *ngFor="let a of absencesAll" class="bg-orange-50 p-4 rounded-lg shadow-sm flex justify-between items-center">
             <div>
-              <p><strong>{{ a.nomEtudiant }}</strong> {{ a.prenomEtudiant }}<br />
-                 <strong>{{ a.classeEtudiant }}</strong></p>
+              <p><strong>{{ a.nomEtudiant }}</strong> {{ a.prenomEtudiant }}</p>
+              <p>Classe : <strong>{{ a.classeEtudiant }}</strong></p>
               <p class="text-gray-500 text-xs">{{ a.dateParsed | date:'dd/MM/yyyy HH:mm' }}</p>
             </div>
-            <div class="flex justify-between text-sm items-center">
-              <p class="text-red-600 font-semibold mr-3">{{ a.type }}</p>
+            <div class="text-right">
+              <p class="text-red-600 font-semibold">{{ a.type }}</p>
               <p class="text-gray-500">{{ a.justifiee ? 'Justifiée' : 'Non justifiée' }}</p>
             </div>
           </div>
@@ -62,9 +65,11 @@
         <div class="space-y-4 text-sm overflow-y-auto max-h-[300px] pr-2">
           <div *ngFor="let j of justificationsAll" class="bg-green-50 p-4 rounded-lg shadow-sm flex justify-between items-center">
             <div>
-              <strong>{{ j.nomCompletEtudiant }}</strong><br />
-              Classe: <strong>{{ j.classeEtudiant }}</strong><br />
-              <span>Statut : <strong class="text-pink-600">{{ j.statut }}</strong></span>
+              <p><strong>{{ j.nomCompletEtudiant }}</strong></p>
+              <p>Matricule : <strong>{{ j.matriculeEtudiant }}</strong></p>
+              <p>Classe : <strong>{{ j.classeEtudiant }}</strong></p>
+              <p>Date : <span class="text-gray-500">{{ j.dateSoumissionParsed | date:'dd/MM/yyyy HH:mm' }}</span></p>
+              <p>Statut : <strong class="text-pink-600">{{ j.statut }}</strong></p>
             </div>
             <div class="space-x-2">
               <button class="bg-[#5c3b28] text-white px-3 py-1 rounded hover:bg-[#40291c] transition">Détails</button>
@@ -72,6 +77,7 @@
           </div>
         </div>
       </div>
+
     </div>
   </main>
 </div>

@@ -7,7 +7,7 @@ interface Utilisateur {
   nom: string;
   prenom: string;
   email: string;
-  role: string;       // 'ETUDIANT', 'ADMIN', 'VIGILE', etc.
+  role: string;
   photo?: string;
   matricule: string;
   classeId: string;
@@ -19,13 +19,12 @@ interface Absence {
   date: { $date: { $numberLong: string } };
   heureDebut: any;
   heureFin: any;
-  statut: string;         // 'PRESENT', 'RETARD', etc.
+  statut: string;
   etudiantId: string;
   nomEtudiant?: string;
   prenomEtudiant?: string;
   classeEtudiant?: string;
   justificationId?: string | null;
-  // Champs calculés ajoutés côté client
   type?: string;
   justifiee?: boolean;
   dateParsed?: Date;
@@ -34,12 +33,14 @@ interface Absence {
 interface Justification {
   _id: any;
   etudiantId: string;
-  nomCompletEtudiant?: string;
-  classeEtudiant?: string;
   statut: string;
   dateSoumission?: { $date: { $numberLong: string } };
-  // Champs calculés côté client
   dateSoumissionParsed?: Date | null;
+
+  // Champs enrichis
+  nomCompletEtudiant?: string;
+  classeEtudiant?: string;
+  matriculeEtudiant?: string;
 }
 
 @Component({
@@ -59,15 +60,14 @@ export class DashboardAdminComponent implements OnInit {
 
   absencesDuJour: Absence[] = [];
   justificationsDuJour: Justification[] = [];
-  // getter calculé pour les présences (statut = "PRESENT")
-get totalPresences(): number {
-  return this.absencesAll.filter(a => a.statut === 'PRESENT').length;
-}
 
-// getter calculé pour les absences (statut = "ABSENT")
-get totalAbsents(): number {
-  return this.absencesAll.filter(a => a.statut === 'ABSENT').length;
-}
+  get totalPresences(): number {
+    return this.absencesAll.filter(a => a.statut === 'PRESENT').length;
+  }
+
+  get totalAbsents(): number {
+    return this.absencesAll.filter(a => a.statut === 'ABSENT').length;
+  }
 
   totalAbsences = 0;
   totalRetards = 0;
@@ -77,18 +77,25 @@ get totalAbsents(): number {
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.loadUtilisateurs();  // On charge d'abord les utilisateurs
+    this.loadUtilisateurs();
   }
 
   private parseMongoDate(dateObj: any): Date {
     try {
-      if (dateObj && dateObj.$date && dateObj.$date.$numberLong) {
+      if (dateObj?.$date?.$numberLong) {
         return new Date(parseInt(dateObj.$date.$numberLong, 10));
       }
       return new Date();
     } catch {
       return new Date();
     }
+  }
+
+  isToday(date: Date): boolean {
+    const today = new Date();
+    return date.getDate() === today.getDate() &&
+           date.getMonth() === today.getMonth() &&
+           date.getFullYear() === today.getFullYear();
   }
 
   loadUtilisateurs(): void {
@@ -122,7 +129,6 @@ get totalAbsents(): number {
           });
 
           this.absencesDuJour = this.absencesAll.filter(abs => this.isToday(abs.dateParsed!));
-
           this.totalAbsences = this.absencesAll.length;
           this.totalRetards = this.absencesAll.filter(abs => abs.statut === 'RETARD').length;
         },
@@ -134,10 +140,16 @@ get totalAbsents(): number {
     this.http.get<Justification[]>('https://absence-ism-backend.onrender.com/api/justifications')
       .subscribe({
         next: (data) => {
-          this.justificationsAll = data.map(j => ({
-            ...j,
-            dateSoumissionParsed: j.dateSoumission ? this.parseMongoDate(j.dateSoumission) : null
-          }));
+          this.justificationsAll = data.map(j => {
+            const user = this.utilisateurMap.get(j.etudiantId);
+            return {
+              ...j,
+              dateSoumissionParsed: j.dateSoumission ? this.parseMongoDate(j.dateSoumission) : null,
+              nomCompletEtudiant: user ? `${user.nom} ${user.prenom}` : '',
+              classeEtudiant: user?.classeId || '',
+              matriculeEtudiant: user?.matricule || '',
+            };
+          });
 
           this.justificationsDuJour = this.justificationsAll.filter(j =>
             j.dateSoumissionParsed ? this.isToday(j.dateSoumissionParsed) : false
@@ -150,16 +162,8 @@ get totalAbsents(): number {
       });
   }
 
-  isToday(date: Date): boolean {
-    const today = new Date();
-    return date.getDate() === today.getDate() &&
-           date.getMonth() === today.getMonth() &&
-           date.getFullYear() === today.getFullYear();
-  }
-
   logout(): void {
     localStorage.clear();
     window.location.href = '/login';
   }
-
 }
