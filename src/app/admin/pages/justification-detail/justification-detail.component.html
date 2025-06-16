@@ -5,7 +5,7 @@
       <h2 class="text-2xl font-bold mb-8 text-center">Admin ISM</h2>
   
       <nav class="flex-1 space-y-4">
-        <a routerLink="/dashboard" routerLinkActive="font-bold" class="block px-2 py-2 rounded hover:bg-[#40291c] transition">📊 Dashboard</a>
+        <a routerLink="admin/dashboard-admin" routerLinkActive="font-bold" class="block px-2 py-2 rounded hover:bg-[#40291c] transition">📊 Dashboard</a>
         <a routerLink="/absences" routerLinkActive="font-bold" class="block px-2 py-2 rounded hover:bg-[#40291c] transition">❌ Absences</a>
         <a routerLink="/justifications" routerLinkActive="font-bold" class="block px-2 py-2 rounded hover:bg-[#40291c] transition">📄 Justifications</a>
       </nav>
@@ -16,9 +16,9 @@
     </aside>
   
     <!-- Contenu principal -->
-    <main class="flex-1 py-10 px-8 bg-gray-50">
+    <main class="flex-1 px-16 px-8 bg-gray-50">
   
-      <div class="max-w-2xl mx-auto bg-white shadow-md rounded-xl p-8">
+      <div class="max-w-4xl mx-auto bg-white shadow-md rounded-xl p-8">
         <h2 class="text-2xl font-bold text-[#5c3b28] mb-6">📄 Détail de la justification</h2>
   
         <div *ngIf="justification">
