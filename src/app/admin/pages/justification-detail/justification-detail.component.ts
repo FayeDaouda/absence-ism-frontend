@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-justification-detail',
+  standalone: true,
+  imports: [CommonModule, HttpClientModule],
   templateUrl: './justification-detail.component.html',
 })
 export class JustificationDetailComponent implements OnInit {
