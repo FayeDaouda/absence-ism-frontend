@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, computed } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../services/auth.service'; // ✅
 
 @Component({
   selector: 'app-admin-layout',
@@ -9,19 +10,12 @@ import { CommonModule } from '@angular/common';
   templateUrl: './admin-layout.component.html',
   styleUrls: ['./admin-layout.component.css']
 })
-export class AdminLayoutComponent implements OnInit {
+export class AdminLayoutComponent {
+  utilisateur = computed(() => this.authService.currentUser());
 
-  utilisateur: any = null;
-
-  ngOnInit(): void {
-    const utilisateurString = localStorage.getItem('utilisateur');
-    if (utilisateurString) {
-      this.utilisateur = JSON.parse(utilisateurString);
-    }
-  }
+  constructor(private authService: AuthService) {}
 
   logout(): void {
-    localStorage.clear();
-    window.location.href = '/login';
+    this.authService.logout();
   }
 }

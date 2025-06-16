@@ -22,18 +22,20 @@
     <main class="ml-64 flex-1 overflow-auto bg-gray-50 p-8">
   
       <!-- Barre supérieure avec nom/prénom/photo -->
-      <div class="flex justify-end items-center mb-6">
-        <div class="flex items-center gap-4">
-          <div class="text-right">
-            <p class="font-semibold text-gray-700">{{ utilisateur?.prenom }} {{ utilisateur?.nom }}</p>
-            <p class="text-sm text-gray-500">Administrateur</p>
-          </div>
-          <img 
-            [src]="utilisateur?.photoUrl || 'https://via.placeholder.com/40'" 
-            alt="Profil"
-            class="w-10 h-10 rounded-full border-2 border-[#5c3b28]" />
-        </div>
-      </div>
+      <!-- Barre en haut à droite avec nom/prénom/photo -->
+            <div class="flex justify-end items-center mb-6">
+                <div class="flex items-center gap-4">
+                <div class="text-right">
+                    <p class="font-semibold text-gray-700">{{ utilisateur()?.prenom }} {{ utilisateur()?.nom }}</p>
+                    <p class="text-sm text-gray-500">{{ utilisateur()?.role?.toUpperCase() }}</p>
+                </div>
+                <img 
+                    [src]="utilisateur()?.photoUrl || 'https://via.placeholder.com/40'" 
+                    alt="Profil"
+                    class="w-10 h-10 rounded-full border-2 border-[#5c3b28]" />
+                </div>
+            </div>
+  
   
       <!-- Contenu dynamique -->
       <router-outlet></router-outlet>
