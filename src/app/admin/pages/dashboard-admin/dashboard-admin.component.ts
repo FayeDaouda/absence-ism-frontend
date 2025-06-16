@@ -142,27 +142,30 @@ export class DashboardAdminComponent implements OnInit {
     this.http.get<Justification[]>('https://absence-ism-backend.onrender.com/api/justifications')
       .subscribe({
         next: (data) => {
+          console.log('Justifications brutes reçues:', data);
           this.justificationsAll = data.map(j => {
             const user = this.utilisateurMap.get(j.etudiantId);
             return {
               ...j,
+              _id: j._id ,  // <-- Assure que _id est bien défini
               dateSoumissionParsed: j.dateSoumission ? this.parseMongoDate(j.dateSoumission) : null,
               nomCompletEtudiant: user ? `${user.nom} ${user.prenom}` : '',
               classeEtudiant: user?.classeId || '',
               matriculeEtudiant: user?.matricule || '',
             };
           });
-
+  
           this.justificationsDuJour = this.justificationsAll.filter(j =>
             j.dateSoumissionParsed ? this.isToday(j.dateSoumissionParsed) : false
           );
-
+  
           this.totalJustifications = this.justificationsAll.length;
           this.totalJustificationsDuJour = this.justificationsDuJour.length;
         },
         error: err => console.error('Erreur lors du chargement des justifications :', err)
       });
   }
+  
 
   logout(): void {
     localStorage.clear();
