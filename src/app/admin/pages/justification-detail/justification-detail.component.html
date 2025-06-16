@@ -1,24 +1,59 @@
-<div class="max-w-2xl mx-auto bg-white shadow-md rounded-xl p-8 mt-10">
-    <h2 class="text-2xl font-bold text-[#5c3b28] mb-6">📄 Détail de la justification</h2>
+<div class="min-h-screen flex">
+
+    <!-- Sidebar gauche -->
+    <aside class="w-64 bg-[#5c3b28] text-white flex flex-col py-6 px-4 shadow-lg">
+      <h2 class="text-2xl font-bold mb-8 text-center">Admin ISM</h2>
   
-    <div *ngIf="justification">
-      <p><strong>Nom :</strong> {{ justification.nomCompletEtudiant }}</p>
-      <p><strong>Matricule :</strong> {{ justification.matriculeEtudiant }}</p>
-      <p><strong>Classe :</strong> {{ justification.classeEtudiant }}</p>
-      <p><strong>Motif :</strong> {{ justification.motif }}</p>
-      <p><strong>Date :</strong> {{ justification.dateSoumissionParsed | date:'dd/MM/yyyy HH:mm' }}</p>
-      <p><strong>Statut :</strong> 
-        <span class="text-blue-600">{{ justification.statut }}</span>
-      </p>
+      <nav class="flex-1 space-y-4">
+        <a routerLink="/dashboard" routerLinkActive="font-bold" class="block px-2 py-2 rounded hover:bg-[#40291c] transition">📊 Dashboard</a>
+        <a routerLink="/absences" routerLinkActive="font-bold" class="block px-2 py-2 rounded hover:bg-[#40291c] transition">❌ Absences</a>
+        <a routerLink="/justifications" routerLinkActive="font-bold" class="block px-2 py-2 rounded hover:bg-[#40291c] transition">📄 Justifications</a>
+      </nav>
   
-      <div class="mt-6 space-x-4">
-        <button (click)="validerJustification()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-          ✅ Valider
-        </button>
-        <button (click)="refuserJustification()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
-          ❌ Refuser
-        </button>
+      <button (click)="logout()" class="mt-8 bg-red-600 hover:bg-red-700 text-white py-2 rounded transition">
+        Se déconnecter
+      </button>
+    </aside>
+  
+    <!-- Contenu principal -->
+    <main class="flex-1 py-10 px-8 bg-gray-50">
+  
+      <div class="max-w-2xl mx-auto bg-white shadow-md rounded-xl p-8">
+        <h2 class="text-2xl font-bold text-[#5c3b28] mb-6">📄 Détail de la justification</h2>
+  
+        <div *ngIf="justification">
+          <p><strong>Nom :</strong> {{ justification.nomCompletEtudiant }}</p>
+          <p><strong>Matricule :</strong> {{ justification.matriculeEtudiant }}</p>
+          <p><strong>Classe :</strong> {{ justification.classeEtudiant }}</p>
+          <p><strong>Motif :</strong> {{ justification.motif }}</p>
+          <p><strong>Date :</strong> {{ justification.dateSoumissionParsed | date:'dd/MM/yyyy HH:mm' }}</p>
+          <p><strong>Statut :</strong> 
+            <span class="text-blue-600">{{ justification.statut }}</span>
+          </p>
+  
+          <div *ngIf="justification.fichiers?.length > 0" class="mt-4">
+            <h3 class="font-semibold mb-2">📎 Fichiers justificatifs :</h3>
+            <ul class="list-disc list-inside">
+              <li *ngFor="let url of justification.fichiers">
+                <a [href]="url" target="_blank" class="text-blue-500 underline hover:text-blue-700">
+                  {{ url }}
+                </a>
+              </li>
+            </ul>
+          </div>
+  
+          <div class="mt-6 space-x-4">
+            <button (click)="validerJustification()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+              ✅ Valider
+            </button>
+            <button (click)="refuserJustification()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+              ❌ Refuser
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
+  
+    </main>
+  
   </div>
   

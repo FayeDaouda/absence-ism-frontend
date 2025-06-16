@@ -87,4 +87,8 @@ export class JustificationDetailComponent implements OnInit {
         }
       });
   }
+  logout(): void {
+    localStorage.clear();
+    window.location.href = '/login';
+  }
 }
