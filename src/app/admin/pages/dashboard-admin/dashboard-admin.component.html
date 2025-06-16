@@ -72,7 +72,12 @@
               <p>Statut : <strong class="text-pink-600">{{ j.statut }}</strong></p>
             </div>
             <div class="space-x-2">
-              <button class="bg-[#5c3b28] text-white px-3 py-1 rounded hover:bg-[#40291c] transition">Détails</button>
+              <a 
+                [routerLink]="['/admin/justifications', j._id]" 
+                class="bg-[#5c3b28] text-white px-3 py-1 rounded hover:bg-[#40291c] transition inline-block text-center">
+                Détails
+              </a>
+
             </div>
           </div>
         </div>
